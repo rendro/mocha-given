@@ -24,23 +24,23 @@ describe "assigning stuff to variables", ->
 ### Global installation of mocha
 
 If you have mocha installed globally you need to install mocha-given globally as well.
-
+```
 $ npm install -g mocha mocha-given
-
+```
 Then you can run your tests by setting the interface of mocha to mocha-given
-
+```
 $ mocha -u mocha-given --compilers coffee:coffeescript -R spec
-
+```
 ### Local installation of mocha
 
 If you have installed mocha and mocha-given locally
-
+```
 $ npm install mocha mocha-given
-
+```
 you have to call the mocha binary directly:
-
+```
 $ ./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffeescript -R spec
-
+```
 
 ## Run tests programmatically
 
