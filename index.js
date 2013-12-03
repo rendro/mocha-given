@@ -1,2 +1,2 @@
 require('coffee-script');
-require('./lib/mocha-given');
+module.exports = require('./lib/mocha-given');

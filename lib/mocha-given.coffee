@@ -138,5 +138,5 @@ MochaGivenSuite = (suite) ->
 		context.Then.only = ->
 			declareSpec arguments, context.it.only
 
-module.exports = MochaGivenSuite;
+module.exports = MochaGivenSuite
 Mocha.interfaces['mocha-given'] = module.exports
