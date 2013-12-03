@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 0.0.4, Dec 3, 2013
+* fixed broken export
+
 ## Version 0.0.3, Dec 3, 2013
 * export MochaGivenSuite to allow it being automatically loaded by mocha
 

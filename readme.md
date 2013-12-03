@@ -21,7 +21,28 @@ describe "assigning stuff to variables", ->
 
 ## Run tests
 
-Currently it is only possible to run tests programatically. For example safe this file as `runtests.js`:
+### Global installation of mocha
+
+If you have mocha installed globally you need to install mocha-given globally as well.
+
+$ npm install -g mocha mocha-given
+
+Then you can run your tests by setting the interface of mocha to mocha-given
+
+$ mocha -u mocha-given --compilers coffee:coffeescript -R spec
+
+### Local installation of mocha
+
+If you have installed mocha and mocha-given locally
+
+$ npm install mocha mocha-given
+
+you have to call the mocha binary directly:
+
+$ ./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffeescript -R spec
+
+
+## Run tests programmatically
 
 ``` javascript
 var Mocha = require('mocha');
@@ -57,7 +78,8 @@ mocha.run(function(failures){
   });
 });
 ```
-And the run from command line (with mocha and coffeescript installed):
+
+Run from command line (with mocha and mocha-given installed):
 
 ```
 $ node runtests.js
