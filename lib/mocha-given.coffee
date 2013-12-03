@@ -79,6 +79,8 @@ MochaGivenSuite = (suite) ->
 			suites[0].afterAll(fn)
 			return
 
+		context.Given =
+		context.When =
 		context.beforeEach = (fn) ->
 			suites[0].beforeEach(fn)
 			return
@@ -87,7 +89,8 @@ MochaGivenSuite = (suite) ->
 			suites[0].afterEach(fn)
 			return
 
-		context.describe = context.context = (title, fn) ->
+		context.describe =
+		context.context = (title, fn) ->
 			suite = Suite.create(suites[0], title)
 			suites.unshift(suite)
 			fn.call(suite)
@@ -109,7 +112,8 @@ MochaGivenSuite = (suite) ->
 			mocha.grep(suite.fullTitle())
 			return suite
 
-		context.it = context.specify = (title, fn) ->
+		context.it =
+		context.specify = (title, fn) ->
 			suite = suites[0]
 			fn = null if suite.pending
 			test = new Test(title, fn)
@@ -127,12 +131,6 @@ MochaGivenSuite = (suite) ->
 		context.it.skip = (title) ->
 			context.it(title)
 			return
-
-		context.Given = (fn) ->
-			context.beforeEach(fn)
-
-		context.When = (fn) ->
-			context.beforeEach(fn)
 
 		context.Then = ->
 			declareSpec arguments, context.it
