@@ -54,6 +54,18 @@ wasComparison = (expectation) ->
 		[s, left, comparator, right] = comparison
 		{left, comparator, right}
 
+declareSpec = (specArgs, itFunc)->
+	label = o(specArgs).firstThat (arg) -> o(arg).isString()
+	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
+
+	itFunc "then #{label ? stringifyExpectation(fn)}", ->
+		try
+			expect(fn.call(@)).to.be.ok()
+		catch exception
+			msg = exception.message
+			msg += getErrorDetails fn, @
+			throw new Error msg
+
 MochaGivenSuite = (suite) ->
 	suites = [suite]
 
@@ -123,16 +135,10 @@ MochaGivenSuite = (suite) ->
 			context.beforeEach(fn)
 
 		context.Then = ->
-			label = o(arguments).firstThat (arg) -> o(arg).isString()
-			fn    = o(arguments).firstThat (arg) -> o(arg).isFunction()
+			declareSpec arguments, context.it
 
-			context.it "then #{label ? stringifyExpectation(fn)}", ->
-				try
-					expect(fn.call(@)).to.be.ok()
-				catch exception
-					msg = exception.message
-					msg += getErrorDetails fn, @
-					throw new Error msg
+		context.Then.only = ->
+			declareSpec arguments, context.it.only
 
 module.exports = MochaGivenSuite;
 Mocha.interfaces['mocha-given'] = module.exports
