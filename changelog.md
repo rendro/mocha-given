@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 0.0.5, Dec 4, 2013
+* Added `And`
+
 ## Version 0.0.4, Dec 3, 2013
 * fixed broken export
 
@@ -10,4 +13,4 @@
 * Added `Then.only`
 
 ## Version 0.0.1, Dec 3, 2013
-* Initial version With `Given`, `When`, and `Then`
+* Initial version with `Given`, `When`, and `Then`

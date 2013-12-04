@@ -81,6 +81,7 @@ MochaGivenSuite = (suite) ->
 
 		context.Given =
 		context.When =
+		context.And =
 		context.beforeEach = (fn) ->
 			suites[0].beforeEach(fn)
 			return
