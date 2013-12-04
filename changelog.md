@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 0.0.6, Dec 5, 2013
+* fixed `And`
+
 ## Version 0.0.5, Dec 4, 2013
 * Added `And`
 
