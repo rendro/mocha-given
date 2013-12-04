@@ -79,9 +79,6 @@ MochaGivenSuite = (suite) ->
 			suites[0].afterAll(fn)
 			return
 
-		context.Given =
-		context.When =
-		context.And =
 		context.beforeEach = (fn) ->
 			suites[0].beforeEach(fn)
 			return
@@ -133,11 +130,39 @@ MochaGivenSuite = (suite) ->
 			context.it(title)
 			return
 
-		context.Then = ->
+		# extension methods
+
+		mostRecentlyUsed = null
+
+		Given =
+		When = ->
+			context.beforeEach arguments
+
+		Then = ->
 			declareSpec arguments, context.it
 
-		context.Then.only = ->
+		Then.only = ->
 			declareSpec arguments, context.it.only
+
+		context.Given = ->
+			mostRecentlyUsed = Given
+			Given arguments
+
+		context.When = ->
+			mostRecentlyUsed = When
+			When arguments
+
+		context.Then = ->
+			mostRecentlyUsed = Then
+			Then arguments
+
+		context.Then.only = ->
+			mostRecentlyUsed = Then.only
+			Then.only arguments
+
+		context.And = ->
+			console.log arguments
+			mostRecentlyUsed arguments
 
 module.exports = MochaGivenSuite
 Mocha.interfaces['mocha-given'] = module.exports
