@@ -130,39 +130,33 @@ MochaGivenSuite = (suite) ->
 			context.it(title)
 			return
 
-		# extension methods
+		# mocha-given extension
 
 		mostRecentlyUsed = null
 
 		Given =
-		When = ->
-			context.beforeEach arguments
+		When = context.beforeEach
 
 		Then = ->
 			declareSpec arguments, context.it
 
-		Then.only = ->
-			declareSpec arguments, context.it.only
-
 		context.Given = ->
 			mostRecentlyUsed = Given
-			Given arguments
+			Given.apply this, Array.prototype.slice.call arguments
 
 		context.When = ->
 			mostRecentlyUsed = When
-			When arguments
+			When.apply this, Array.prototype.slice.call arguments
 
 		context.Then = ->
 			mostRecentlyUsed = Then
-			Then arguments
+			Then.apply this, Array.prototype.slice.call arguments
 
 		context.Then.only = ->
-			mostRecentlyUsed = Then.only
-			Then.only arguments
+			declareSpec arguments, this.it.only
 
 		context.And = ->
-			console.log arguments
-			mostRecentlyUsed arguments
+			mostRecentlyUsed.apply this, Array.prototype.slice.call arguments
 
 module.exports = MochaGivenSuite
 Mocha.interfaces['mocha-given'] = module.exports
