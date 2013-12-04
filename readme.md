@@ -1,6 +1,6 @@
 # mocha-given
 
-Mocha-given is a mocha interface that helps you write cleaner specs using `Given`, `When`, and `Then`.
+Mocha-given is a mocha interface that helps you write cleaner specs using `Given`, `When`, `Then` and `And`.
 It is a shameless port of Justin Searls' [jasmine-given](https://github.com/searls/jasmine-given).
 
 ## Example Specs
@@ -8,9 +8,9 @@ It is a shameless port of Justin Searls' [jasmine-given](https://github.com/sear
 ``` coffeescript
 describe "assigning stuff to this", ->
 	Given -> @number = 24
-	Given -> @number++
-	When -> @number *= 2
-	Then -> @number == 50
+	When  -> @number++
+	And   -> @number *= 2
+	Then  -> @number == 50
 
 describe "assigning stuff to variables", ->
 	subject = null
