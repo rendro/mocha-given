@@ -58,13 +58,22 @@ declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
 
-	itFunc "then #{label ? stringifyExpectation(fn)}", ->
-		try
-			expect(fn.call(@)).to.be.ok()
-		catch exception
-			msg = exception.message
-			msg += getErrorDetails fn, @
-			throw new Error msg
+	if !fn.toString().replace(/\n/g,'').match(/^function\s?\(\)/i)
+		itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
+			try
+				expect(fn.apply(@, Array.prototype.slice.call(arguments))).to.be.ok()
+			catch exception
+				msg = exception.message
+				msg += getErrorDetails fn, @
+				throw new Error msg
+	else
+		itFunc "then #{label ? stringifyExpectation(fn)}", ->
+			try
+				expect(fn.call(@)).to.be.ok()
+			catch exception
+				msg = exception.message
+				msg += getErrorDetails fn, @
+				throw new Error msg
 
 MochaGivenSuite = (suite) ->
 	suites = [suite]
