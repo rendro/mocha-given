@@ -1,6 +1,6 @@
 {
   "name": "mocha-given",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Adds a Given-When-Then DSL to mocha as an alternative style for specs",
   "author": {
     "name": "Robert Fleischmann",
