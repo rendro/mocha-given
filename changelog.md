@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 0.0.7, Dec 5, 2013
+* added support for async `Then` with a done callback
+
 ## Version 0.0.6, Dec 5, 2013
 * fixed `And`
 
