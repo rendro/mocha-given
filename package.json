@@ -25,6 +25,8 @@
     "given",
     "when",
     "then",
+    "test",
+    "tdd",
     "bdd"
   ],
   "bugs": {
