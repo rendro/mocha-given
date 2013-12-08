@@ -12,6 +12,13 @@
     "coffee-script": "~1.6.3",
     "expect.js": "~0.2.0"
   },
+  "devDependencies": {
+    "coffee-script": "~1.6.3",
+    "mocha": "~1.15.1"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffee-script -R spec"
+  },
   "keywords": [
     "mocha",
     "given",
