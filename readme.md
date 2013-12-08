@@ -1,5 +1,8 @@
 # mocha-given
 
+[![Build Status](https://travis-ci.org/rendro/mocha-given.png?branch=development)](https://travis-ci.org/rendro/mocha-given)
+[![NPM version](https://badge.fury.io/js/mocha-given.png)](http://badge.fury.io/js/mocha-given)
+
 Mocha-given is a mocha interface that helps you write cleaner specs using `Given`, `When`, `Then` and `And`.
 It is a shameless port of Justin Searls' [jasmine-given](https://github.com/searls/jasmine-given).
 
