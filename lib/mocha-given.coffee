@@ -64,12 +64,12 @@ declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
 	itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
-		i.call @ for i in whenList if whenList.length
+		i.apply @ for i in whenList if whenList.length
 		try
 			if o(fn).hasArguments()
 				expect(fn.apply(@, Array.prototype.slice.call(arguments))).to.be.ok()
 			else
-				expect(fn.call(@)).to.be.ok()
+				expect(fn.apply(@)).to.be.ok()
 				done()
 		catch exception
 			msg = exception.message
@@ -80,6 +80,7 @@ MochaGivenSuite = (suite) ->
 	suites = [suite]
 
 	suite.on 'pre-require', (context, file, mocha) ->
+
 
 		# reset context for watched tests
 		suite.ctx = new Context
@@ -156,18 +157,23 @@ MochaGivenSuite = (suite) ->
 			delete @currentTest.ctx[i] for i of @currentTest.ctx when i not in @currentTest.ctxKeys
 
 		Given = ->
-			args = Array.prototype.slice.call arguments
-			if args.length == 1
-				context.beforeEach.apply @, args
+			assignTo = o(arguments).firstThat (arg) -> o(arg).isString()
+			fn = o(arguments).firstThat (arg) -> o(arg).isFunction()
+			if assignTo
+				context.beforeEach -> @[assignTo] = fn.apply @
 			else
-				assignTo = o(args).firstThat (arg) -> o(arg).isString()
-				fn = o(args).firstThat (arg) -> o(arg).isFunction()
-				context.beforeEach ->
-					@[assignTo] = fn.call @
+				context.beforeEach.apply @, Array.prototype.slice.call arguments
 
-		When = (fn) ->
-			context.beforeEach -> whenList.push(fn)
-			context.afterEach  -> whenList.pop()
+		When = ->
+			assignTo = o(arguments).firstThat (arg) -> o(arg).isString()
+			fn = o(arguments).firstThat (arg) -> o(arg).isFunction()
+			if assignTo
+				context.beforeEach -> whenList.push(-> @[assignTo] = fn.apply @)
+			else
+				context.beforeEach -> whenList.push(fn)
+
+			context.afterEach ->
+				whenList.pop()
 
 		Then = ->
 			declareSpec arguments, context.it
