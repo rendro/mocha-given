@@ -1,9 +1,9 @@
-expect = require 'expect.js'
+expect  = require 'expect.js'
 
-Mocha = if module.parent then module.parent.require('mocha') else window.Mocha
-Suite = Mocha.Suite
-Test  = Mocha.Test
-utils = Mocha.utils
+Mocha   = if module.parent then module.parent.require('mocha') else window.Mocha
+Suite   = Mocha.Suite
+Test    = Mocha.Test
+utils   = Mocha.utils
 Context = Mocha.Context
 
 comparisonLookup =
@@ -83,6 +83,9 @@ MochaGivenSuite = (suite) ->
 
 	suite.on 'pre-require', (context, file, mocha) ->
 
+		# reset context for watched tests
+		suite.ctx = new Context
+
 		context.before = (fn) ->
 			suites[0].beforeAll(fn)
 			return
@@ -146,11 +149,19 @@ MochaGivenSuite = (suite) ->
 
 		mostRecentlyUsed = null
 
+		# get all keys in the context
+		context.beforeEach ->
+			@currentTest.ctxKeys = (i for i of @currentTest.ctx)
+
+		# remove added keys to clean up what mocha messes up with a shared context
+		context.afterEach ->
+			delete @currentTest.ctx[i] for i of @currentTest.ctx when i not in @currentTest.ctxKeys
+
 		Given =
 		When = ->
 			args = Array.prototype.slice.call arguments
 			if args.length == 1
-				context.beforeEach.apply this, args
+				context.beforeEach.apply @, args
 			else
 				assignTo = o(args).firstThat (arg) -> o(arg).isString()
 				fn       = o(args).firstThat (arg) -> o(arg).isFunction()
@@ -162,21 +173,21 @@ MochaGivenSuite = (suite) ->
 
 		context.Given = ->
 			mostRecentlyUsed = Given
-			Given.apply this, Array.prototype.slice.call arguments
+			Given.apply @, Array.prototype.slice.call arguments
 
 		context.When = ->
 			mostRecentlyUsed = When
-			When.apply this, Array.prototype.slice.call arguments
+			When.apply @, Array.prototype.slice.call arguments
 
 		context.Then = ->
 			mostRecentlyUsed = Then
-			Then.apply this, Array.prototype.slice.call arguments
+			Then.apply @, Array.prototype.slice.call arguments
 
 		context.Then.only = ->
-			declareSpec arguments, this.it.only
+			declareSpec arguments, @it.only
 
 		context.And = ->
-			mostRecentlyUsed.apply this, Array.prototype.slice.call arguments
+			mostRecentlyUsed.apply @, Array.prototype.slice.call arguments
 
 module.exports = MochaGivenSuite
 Mocha.interfaces['mocha-given'] = module.exports
