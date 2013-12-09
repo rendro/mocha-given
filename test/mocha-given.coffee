@@ -1,4 +1,4 @@
-expect          = require 'expect.js'
+expect = require 'expect.js'
 
 describe 'mocha-given', ->
 

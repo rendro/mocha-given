@@ -4,7 +4,7 @@
 [![NPM version](https://badge.fury.io/js/mocha-given.png)](http://badge.fury.io/js/mocha-given)
 
 Mocha-given is a mocha interface that helps you write cleaner specs using `Given`, `When`, `Then` and `And`.
-It is a shameless port of Justin Searls' [jasmine-given](https://github.com/searls/jasmine-given).
+It is a shameless port of Justin Searls' [jasmine-given](https://github.com/searls/jasmine-given) which is a tribute to Jim Weirich's terrific [rspec-given](https://github.com/jimweirich/rspec-given) gem.
 
 ## Example Specs
 
@@ -18,8 +18,8 @@ describe "assigning stuff to this", ->
 describe "assigning stuff to variables", ->
 	subject = null
 	Given -> subject = []
-	When -> subject.push('foo')
-	Then -> subject.length == 1
+	When  -> subject.push('foo')
+	Then  -> subject.length == 1
 ```
 
 ## Run tests
