@@ -68,7 +68,6 @@ describe 'mocha-given', ->
 		context 'a subsequent unrelated test run', ->
 			Then -> @pizza == undefined
 
-
 	describe "Givens before Whens order", ->
 
 		context "Outer block", ->

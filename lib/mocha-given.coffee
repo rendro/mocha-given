@@ -16,6 +16,8 @@ comparisonLookup =
 	'<'  : 'to be smaller than'
 	'<=' : 'to be smaller or equal'
 
+whenList = []
+
 o = (thing) ->
 	isFunction: ->
 		Object::toString.call(thing) is "[object Function]"
@@ -61,22 +63,18 @@ wasComparison = (expectation) ->
 declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
-	if o(fn).hasArguments()
-		itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
-			try
+	itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
+		i.call @ for i in whenList if whenList.length
+		try
+			if o(fn).hasArguments()
 				expect(fn.apply(@, Array.prototype.slice.call(arguments))).to.be.ok()
-			catch exception
-				msg = exception.message
-				msg += getErrorDetails fn, @
-				throw new Error msg
-	else
-		itFunc "then #{label ? stringifyExpectation(fn)}", ->
-			try
+			else
 				expect(fn.call(@)).to.be.ok()
-			catch exception
-				msg = exception.message
-				msg += getErrorDetails fn, @
-				throw new Error msg
+				done()
+		catch exception
+			msg = exception.message
+			msg += getErrorDetails fn, @
+			throw new Error msg
 
 MochaGivenSuite = (suite) ->
 	suites = [suite]
@@ -157,8 +155,7 @@ MochaGivenSuite = (suite) ->
 		context.afterEach ->
 			delete @currentTest.ctx[i] for i of @currentTest.ctx when i not in @currentTest.ctxKeys
 
-		Given =
-		When = ->
+		Given = ->
 			args = Array.prototype.slice.call arguments
 			if args.length == 1
 				context.beforeEach.apply @, args
@@ -167,6 +164,10 @@ MochaGivenSuite = (suite) ->
 				fn = o(args).firstThat (arg) -> o(arg).isFunction()
 				context.beforeEach ->
 					@[assignTo] = fn.call @
+
+		When = (fn) ->
+			context.beforeEach -> whenList.push(fn)
+			context.afterEach  -> whenList.pop()
 
 		Then = ->
 			declareSpec arguments, context.it
