@@ -164,7 +164,7 @@ MochaGivenSuite = (suite) ->
 				context.beforeEach.apply @, args
 			else
 				assignTo = o(args).firstThat (arg) -> o(arg).isString()
-				fn       = o(args).firstThat (arg) -> o(arg).isFunction()
+				fn = o(args).firstThat (arg) -> o(arg).isFunction()
 				context.beforeEach ->
 					@[assignTo] = fn.call @
 
