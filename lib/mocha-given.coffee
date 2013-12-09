@@ -4,6 +4,7 @@ Mocha = if module.parent then module.parent.require('mocha') else window.Mocha
 Suite = Mocha.Suite
 Test  = Mocha.Test
 utils = Mocha.utils
+Context = Mocha.Context
 
 comparisonLookup =
 	'===': 'to strictly equal'
@@ -21,6 +22,9 @@ o = (thing) ->
 
 	isString: ->
 		Object::toString.call(thing) is "[object String]"
+
+	hasArguments: ->
+		!thing.toString().replace(/\n/g,'').match(/^function\s?\(\)/i)
 
 	firstThat: (test) ->
 		i = 0
@@ -57,8 +61,7 @@ wasComparison = (expectation) ->
 declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
-
-	if !fn.toString().replace(/\n/g,'').match(/^function\s?\(\)/i)
+	if o(fn).hasArguments()
 		itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
 			try
 				expect(fn.apply(@, Array.prototype.slice.call(arguments))).to.be.ok()
@@ -144,7 +147,15 @@ MochaGivenSuite = (suite) ->
 		mostRecentlyUsed = null
 
 		Given =
-		When = context.beforeEach
+		When = ->
+			args = Array.prototype.slice.call arguments
+			if args.length == 1
+				context.beforeEach.apply this, args
+			else
+				assignTo = o(args).firstThat (arg) -> o(arg).isString()
+				fn       = o(args).firstThat (arg) -> o(arg).isFunction()
+				context.beforeEach ->
+					@[assignTo] = fn.call @
 
 		Then = ->
 			declareSpec arguments, context.it

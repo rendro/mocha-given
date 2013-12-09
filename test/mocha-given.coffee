@@ -17,7 +17,7 @@ describe 'mocha-given', ->
 		Then -> expect(@subject).to.have.key('Then')
 		Then -> expect(@subject).to.have.key('And')
 
-	describe "assigning stuff to this", ->
+	describe 'assigning stuff to this', ->
 		Given -> @number = 24
 		And   -> @number++
 		When  -> @number *= 2
@@ -25,7 +25,7 @@ describe 'mocha-given', ->
 		# or
 		Then  -> expect(@number).to.be(50)
 
-	describe "assigning stuff to variables", ->
+	describe 'assigning stuff to variables', ->
 		subject = null
 		Given -> subject = []
 		When  -> subject.push('foo')
@@ -33,18 +33,18 @@ describe 'mocha-given', ->
 		# or
 		Then  -> expect(subject.length).to.be(1)
 
-	describe "eliminating redundant test execution", ->
+	describe 'eliminating redundant test execution', ->
 		timesGivenWasInvoked = timesWhenWasInvoked = 0
 
-		context "a traditional spec with numerous Then statements", ->
+		context 'a traditional spec with numerous Then statements', ->
 			Given -> timesGivenWasInvoked++
 			When  -> timesWhenWasInvoked++
 			Then  -> timesGivenWasInvoked == 1
 			Then  -> timesWhenWasInvoked == 2
 			Then  -> timesGivenWasInvoked == 3
-			Then "it's important this gets invoked separately for each spec", -> timesWhenWasInvoked == 4
+			Then 'it\'s important this gets invoked separately for each spec', -> timesWhenWasInvoked == 4
 
-		context "using And statements", ->
+		context 'using And statements', ->
 			Given -> timesGivenWasInvoked = timesWhenWasInvoked = 0
 			And   -> timesGivenWasInvoked++
 			When  -> timesWhenWasInvoked++
@@ -53,14 +53,22 @@ describe 'mocha-given', ->
 			And   -> timesGivenWasInvoked == 1
 			And   -> timesWhenWasInvoked == 1
 
-	describe "And", ->
-	context "following a Given", ->
-		Given -> @a = 'a'
-		And   -> @b = 'b' == @a #is okay to return false
-		Then  -> @b == false
+	describe 'And', ->
+		context 'following a Given', ->
+			Given -> @a = 'a'
+			And   -> @b = 'b' == @a #is okay to return false
+			Then  -> @b == false
 
-	context "following a Then", ->
-		Given -> @meat = 'pork'
-		When  -> @meat += 'muffin'
-		Then  -> @meat == 'porkmuffin'
-		And   -> @meat != 'hammuffin'
+		context 'following a Then', ->
+			Given -> @meat = 'pork'
+			When  -> @meat += 'muffin'
+			Then  -> @meat == 'porkmuffin'
+			And   -> @meat != 'hammuffin'
+
+	describe 'giving Given a variable', ->
+		context 'add a variable to `this`', ->
+			Given 'pizza', -> 5
+			Then -> @pizza == 5
+
+		context 'a subsequent unrelated test run', ->
+			Then -> @pizza == undefined
