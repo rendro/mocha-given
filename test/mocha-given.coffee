@@ -2,6 +2,12 @@ expect = require 'expect.js'
 
 describe 'mocha-given', ->
 
+	describe 'implements given, when, then interface', ->
+		Then -> expect(Given).to.be.a('function')
+		Then -> expect(When).to.be.a('function')
+		Then -> expect(Then).to.be.a('function')
+		Then -> expect(And).to.be.a('function')
+
 	describe 'assigning stuff to this', ->
 		Given -> @number = 24
 		And   -> @number++
@@ -44,6 +50,12 @@ describe 'mocha-given', ->
 			And   -> @b = 'b' == @a #is okay to return false
 			Then  -> @b == false
 
+		context 'following a When', ->
+			Given -> @a = -> 'a'
+			When  -> @b = @a()
+			And   -> @b = 'b' == 'a' #is okay to return false
+			Then  -> @b == false
+
 		context 'following a Then', ->
 			Given -> @meat = 'pork'
 			When  -> @meat += 'muffin'
@@ -55,6 +67,13 @@ describe 'mocha-given', ->
 		context 'add a variable to `this`', ->
 			Given 'pizza', -> 5
 			Then -> @pizza == 5
+
+	describe 'giving When a variable', ->
+
+		context 'add a variable to `this`', ->
+			Given 'source', -> 5
+			When  'result', -> @source * 2
+			Then -> @result == 10
 
 	describe 'variable scoping', ->
 
