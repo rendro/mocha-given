@@ -2,7 +2,7 @@ expect = require 'expect.js'
 
 describe 'mocha-given', ->
 
-	describe 'implements given, when, then interface', ->
+	describe 'implements Rspec Given interface', ->
 		Then -> expect(Given).to.be.a('function')
 		Then -> expect(When).to.be.a('function')
 		Then -> expect(Then).to.be.a('function')
@@ -23,7 +23,7 @@ describe 'mocha-given', ->
 		When  -> subject.push('foo')
 		Then  -> subject.length == 1
 		# or
-		Then  -> expect(subject.length).to.be(1)
+		Then  -> expect(subject).to.have.length(1)
 
 	describe 'eliminating redundant test execution', ->
 		timesGivenWasInvoked = timesWhenWasInvoked = 0
