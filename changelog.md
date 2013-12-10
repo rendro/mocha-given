@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Version 0.0.10, Dec 9, 2013
+* when has same syntax and logic as given
+* added more tests
+
+## Version 0.0.9, Dec 9, 2013
+* execute all `Givens` before the `Whens`
+* added given when then execution order tests
+
+## Version 0.0.8, Dec 9, 2013
+* fixed scope errors my mochas "shared behaviour"
+
 ## Version 0.0.7, Dec 5, 2013
 * added support for async `Then` with a done callback
 
