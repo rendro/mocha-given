@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 0.0.11, Dec 10, 2013
+* Add `Invariant`
+
 ## Version 0.0.10, Dec 9, 2013
 * when has same syntax and logic as given
 * added more tests
