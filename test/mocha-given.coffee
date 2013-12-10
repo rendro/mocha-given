@@ -7,6 +7,7 @@ describe 'mocha-given', ->
 		Then -> expect(When).to.be.a('function')
 		Then -> expect(Then).to.be.a('function')
 		Then -> expect(And).to.be.a('function')
+		Then -> expect(Invariant).to.be.a('function')
 
 	describe 'assigning stuff to this', ->
 		Given -> @number = 24
@@ -43,6 +44,27 @@ describe 'mocha-given', ->
 			And   -> timesWhenWasInvoked == 1
 			And   -> timesGivenWasInvoked == 1
 			And   -> timesWhenWasInvoked == 1
+
+	describe 'Invariant', ->
+
+		context 'implicitly called for each Then', ->
+			Given     -> @timesInvariantWasInvoked = 0
+			Invariant -> @timesInvariantWasInvoked++
+			Then      -> @timesInvariantWasInvoked == 1
+			And       -> @timesInvariantWasInvoked == 1
+
+		context 'following a Then', ->
+			Invariant -> expect(@meat).to.contain('pork')
+			Given     -> @meat = 'pork'
+			When      -> @meat += 'muffin'
+			Then      -> @meat == 'porkmuffin'
+			And       -> @meat != 'hammuffin'
+
+		context 'called by And', ->
+			Given     -> @a = 0
+			Invariant -> @a++
+			And       -> @a += 5
+			Then      -> @a == 6
 
 	describe 'And', ->
 		context 'following a Given', ->

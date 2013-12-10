@@ -17,6 +17,7 @@ comparisonLookup =
 	'<=' : 'to be smaller or equal'
 
 whenList = []
+invariantList = []
 
 o = (thing) ->
 	isFunction: ->
@@ -64,8 +65,9 @@ declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
 	itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
-		i.apply @ for i in whenList if whenList.length
 		try
+			i.apply @ for i in whenList if whenList.length
+			i.apply @ for i in invariantList if invariantList.length
 			if o(fn).hasArguments()
 				expect(fn.apply(@, Array.prototype.slice.call(arguments))).to.be.ok()
 			else
@@ -80,7 +82,6 @@ MochaGivenSuite = (suite) ->
 	suites = [suite]
 
 	suite.on 'pre-require', (context, file, mocha) ->
-
 
 		# reset context for watched tests
 		suite.ctx = new Context
@@ -145,7 +146,6 @@ MochaGivenSuite = (suite) ->
 			return
 
 		# mocha-given extension
-
 		mostRecentlyUsed = null
 
 		# get all keys in the context
@@ -175,6 +175,10 @@ MochaGivenSuite = (suite) ->
 			context.afterEach ->
 				whenList.pop()
 
+		Invariant = (fn) ->
+			context.beforeEach -> invariantList.push(fn)
+			context.afterEach  -> invariantList.pop()
+
 		Then = ->
 			declareSpec arguments, context.it
 
@@ -192,6 +196,10 @@ MochaGivenSuite = (suite) ->
 
 		context.Then.only = ->
 			declareSpec arguments, @it.only
+
+		context.Invariant = ->
+			mostRecentlyUsed = Invariant
+			Invariant.apply @, Array.prototype.slice.call arguments
 
 		context.And = ->
 			mostRecentlyUsed.apply @, Array.prototype.slice.call arguments
