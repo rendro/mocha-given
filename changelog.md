@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 0.0.12, Dec 11, 2013
+* remove expect.js dependency
+
 ## Version 0.0.11, Dec 10, 2013
 * Add `Invariant`
 
