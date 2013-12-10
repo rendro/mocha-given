@@ -14,7 +14,8 @@
   "devDependencies": {
     "coffee-script": "~1.6.3",
     "mocha": "~1.15.1",
-    "mocha-given": "~0.0.12"
+    "mocha-given": "~0.0.12",
+    "expect.js": "~0.2.0"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffee-script -R spec"
