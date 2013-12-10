@@ -1,5 +1,3 @@
-expect  = require 'expect.js'
-
 Mocha   = if module.parent then module.parent.require('mocha') else window.Mocha
 Suite   = Mocha.Suite
 Test    = Mocha.Test
@@ -20,6 +18,9 @@ whenList = []
 invariantList = []
 
 o = (thing) ->
+	assert: (context, args) ->
+		throw new Error getErrorDetails thing, context if !!!thing.apply context, args
+
 	isFunction: ->
 		Object::toString.call(thing) is "[object Function]"
 
@@ -46,7 +47,7 @@ getErrorDetails = (fn, context) ->
 	if comparison = wasComparison(expectation)
 		left = (-> eval(comparison.left)).call context # eval is evil
 		right = (-> eval(comparison.right)).call context # eval is evil
-		"\n\n       Comparison: #{expectationString}\n       Expected '#{left}' #{comparisonLookup[comparison.comparator]} '#{right}'\n"
+		"     Expected '#{left}' #{comparisonLookup[comparison.comparator]} '#{right}'\n     Comparison: #{expectationString}\n"
 	else
 		""
 
@@ -65,18 +66,10 @@ declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
 	itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
-		try
-			i.apply @ for i in whenList if whenList.length
-			i.apply @ for i in invariantList if invariantList.length
-			if o(fn).hasArguments()
-				expect(fn.apply(@, Array.prototype.slice.call(arguments))).to.be.ok()
-			else
-				expect(fn.apply(@)).to.be.ok()
-				done()
-		catch exception
-			msg = exception.message
-			msg += getErrorDetails fn, @
-			throw new Error msg
+		i.apply @ for i in whenList if whenList.length
+		i.apply @ for i in invariantList if invariantList.length
+		o(fn).assert @, Array.prototype.slice.call arguments
+		done() if done
 
 MochaGivenSuite = (suite) ->
 	suites = [suite]
