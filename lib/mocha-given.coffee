@@ -1,4 +1,4 @@
-Mocha   = if module.parent then module.parent.require('mocha') else window.Mocha
+Mocha   = if module?.parent? then module.parent.require('mocha') else window.Mocha
 Suite   = Mocha.Suite
 Test    = Mocha.Test
 utils   = Mocha.utils
@@ -197,5 +197,5 @@ MochaGivenSuite = (suite) ->
 		context.And = ->
 			mostRecentlyUsed.apply @, Array.prototype.slice.call arguments
 
-module.exports = MochaGivenSuite
-Mocha.interfaces['mocha-given'] = module.exports
+module.exports = MochaGivenSuite if typeof exports == 'object'
+Mocha.interfaces['mocha-given'] = MochaGivenSuite
