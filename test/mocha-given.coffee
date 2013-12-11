@@ -129,3 +129,19 @@ describe 'mocha-given', ->
 				context "Inner block B", ->
 					Given -> @units = "cm"
 					Then  -> @label == "3 cm"
+
+	describe 'async testing', ->
+		Given -> @t = Date.now()
+
+		describe 'deferred Given', ->
+			Given (done) -> setTimeout done, 30
+			Then -> Date.now() - @t >= 30
+
+		describe 'deferred Then', ->
+			Then (done) ->
+				setTimeout(=>
+					diff = Date.now() - @t
+					if diff >= 30
+						done()
+					else done new Error "expected '#{diff}' to be bigger than '30'"
+				, 30)
