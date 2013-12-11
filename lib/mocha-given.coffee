@@ -69,7 +69,7 @@ declareSpec = (specArgs, itFunc)->
 		i.apply @ for i in whenList if whenList.length
 		i.apply @ for i in invariantList if invariantList.length
 		o(fn).assert @, Array.prototype.slice.call arguments
-		done() if done
+		done() if not o(fn).hasArguments()
 
 MochaGivenSuite = (suite) ->
 	suites = [suite]
