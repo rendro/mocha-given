@@ -1,9 +1,8 @@
-Mocha   = if module?.parent? then module.parent.require('mocha') else window.Mocha
-Suite   = Mocha.Suite
-Test    = Mocha.Test
-utils   = Mocha.utils
-Context = Mocha.Context
-
+Mocha     = if module?.parent? then module.parent.require('mocha') else window.Mocha
+Suite     = Mocha.Suite
+Test      = Mocha.Test
+utils     = Mocha.utils
+Context   = Mocha.Context
 Waterfall = require './waterfall'
 
 comparisonLookup =
@@ -25,10 +24,13 @@ o = (thing) ->
 		throw new Error getErrorDetails thing, context if !!!thing.apply context, args
 
 	isFunction: ->
-		Object::toString.call(thing) is "[object Function]"
+		Object::toString.call(thing) is '[object Function]'
 
 	isString: ->
-		Object::toString.call(thing) is "[object String]"
+		Object::toString.call(thing) is '[object String]'
+
+	isNumber: ->
+		Object::toString.call(thing) is '[object Number]'
 
 	hasArguments: ->
 		!thing.toString().replace(/\n/g,'').match(/^function\s?\(\)/i)
@@ -68,14 +70,21 @@ wasComparison = (expectation) ->
 declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
-	itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
+	time  = o(specArgs).firstThat (arg) -> o(arg).isNumber()
+	timelabel = "after #{time} ms, " if time > 0
+	timelabel = "after #{time / 1e3} s, " if time > 1e3
+	itFunc "then #{timelabel}#{label ? stringifyExpectation(fn)}", (done) ->
 		args = Array.prototype.slice.call arguments
-		new Waterfall(@, [].concat(whenList, invariantList), ->
+		expectation = =>
 			o(fn).assert @, args
 			done() if not o(fn).hasArguments()
+
+		new Waterfall(@, [].concat(whenList, invariantList), ->
+			if time > 0
+				setTimeout(expectation, time)
+			else
+				expectation()
 		).flow()
-		# i.apply @ for i in whenList if whenList.length
-		# i.apply @ for i in invariantList if invariantList.length
 
 MochaGivenSuite = (suite) ->
 	suites = [suite]
@@ -194,7 +203,11 @@ MochaGivenSuite = (suite) ->
 			Then.apply @, Array.prototype.slice.call arguments
 
 		context.Then.only = ->
-			declareSpec arguments, @it.only
+			declareSpec arguments, context.it.only
+
+		context.Then.after = ->
+			mostRecentlyUsed = Then
+			declareSpec arguments, context.it
 
 		context.Invariant = ->
 			mostRecentlyUsed = Invariant

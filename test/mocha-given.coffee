@@ -6,6 +6,8 @@ describe 'mocha-given', ->
 		Then -> expect(Given).to.be.a('function')
 		Then -> expect(When).to.be.a('function')
 		Then -> expect(Then).to.be.a('function')
+		Then -> expect(Then.only).to.be.a('function')
+		Then -> expect(Then.after).to.be.a('function')
 		Then -> expect(And).to.be.a('function')
 		Then -> expect(Invariant).to.be.a('function')
 
@@ -168,3 +170,7 @@ describe 'mocha-given', ->
 						done()
 					else done new Error "expected '#{diff}' to be bigger than '30'"
 				, 30)
+
+	describe 'Then after', ->
+		Given -> @t = Date.now()
+		Then.after 30, 'time has passed', -> Date.now() - @t >= 30
