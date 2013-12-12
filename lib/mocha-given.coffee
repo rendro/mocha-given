@@ -69,8 +69,9 @@ declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
 	itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
-		new Waterfall(@, [].concat(whenList, invariantList), =>
-			o(fn).assert @, Array.prototype.slice.call arguments
+		args = Array.prototype.slice.call arguments
+		new Waterfall(@, [].concat(whenList, invariantList), ->
+			o(fn).assert @, args
 			done() if not o(fn).hasArguments()
 		).flow()
 		# i.apply @ for i in whenList if whenList.length

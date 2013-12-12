@@ -142,11 +142,11 @@ describe 'mocha-given', ->
 			When (done) ->
 				setTimeout(=>
 					diff = Date.now() - @t
-					if diff >= 1500
+					if diff >= 30
 						@result = true
 						done()
 					else done new Error "expected '#{diff}' to be bigger than '30'"
-				, 1500)
+				, 30)
 			Then -> @result == true
 
 		describe 'async Then', ->
