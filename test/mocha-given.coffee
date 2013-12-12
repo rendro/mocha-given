@@ -133,11 +133,23 @@ describe 'mocha-given', ->
 	describe 'async testing', ->
 		Given -> @t = Date.now()
 
-		describe 'deferred Given', ->
+		describe 'async Given', ->
 			Given (done) -> setTimeout done, 30
 			Then -> Date.now() - @t >= 30
 
-		describe 'deferred Then', ->
+		describe 'async When', ->
+			Given 'result', -> false
+			When (done) ->
+				setTimeout(=>
+					diff = Date.now() - @t
+					if diff >= 1500
+						@result = true
+						done()
+					else done new Error "expected '#{diff}' to be bigger than '30'"
+				, 1500)
+			Then -> @result == true
+
+		describe 'async Then', ->
 			Then (done) ->
 				setTimeout(=>
 					diff = Date.now() - @t

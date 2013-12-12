@@ -4,6 +4,8 @@ Test    = Mocha.Test
 utils   = Mocha.utils
 Context = Mocha.Context
 
+Waterfall = require './waterfall'
+
 comparisonLookup =
 	'===': 'to strictly equal'
 	'!==': 'to strictly differ from'
@@ -18,6 +20,7 @@ whenList = []
 invariantList = []
 
 o = (thing) ->
+
 	assert: (context, args) ->
 		throw new Error getErrorDetails thing, context if !!!thing.apply context, args
 
@@ -66,10 +69,12 @@ declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
 	itFunc "then #{label ? stringifyExpectation(fn)}", (done) ->
-		i.apply @ for i in whenList if whenList.length
-		i.apply @ for i in invariantList if invariantList.length
-		o(fn).assert @, Array.prototype.slice.call arguments
-		done() if not o(fn).hasArguments()
+		new Waterfall(@, [].concat(whenList, invariantList), =>
+			o(fn).assert @, Array.prototype.slice.call arguments
+			done() if not o(fn).hasArguments()
+		).flow()
+		# i.apply @ for i in whenList if whenList.length
+		# i.apply @ for i in invariantList if invariantList.length
 
 MochaGivenSuite = (suite) ->
 	suites = [suite]
