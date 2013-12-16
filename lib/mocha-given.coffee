@@ -97,8 +97,7 @@ declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
 	time  = o(specArgs).firstThat (arg) -> o(arg).isNumber()
-	timelabel = "after #{time} ms, " if time > 0
-	timelabel = "after #{time / 1e3} s, " if time > 1e3
+	timelabel = if time > 0 then "after #{if time > 1e3 then time/1e3 else time} ms, " else ''
 	itFunc "then #{timelabel}#{label ? stringifyExpectation(fn)}", (done) ->
 		args = Array.prototype.slice.call arguments
 		expectation = =>

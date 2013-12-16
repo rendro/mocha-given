@@ -174,12 +174,7 @@ declareSpec = function(specArgs, itFunc) {
   time = o(specArgs).firstThat(function(arg) {
     return o(arg).isNumber();
   });
-  if (time > 0) {
-    timelabel = "after " + time + " ms, ";
-  }
-  if (time > 1e3) {
-    timelabel = "after " + (time / 1e3) + " s, ";
-  }
+  timelabel = time > 0 ? "after " + (time > 1e3 ? time / 1e3 : time) + " ms, " : '';
   return itFunc("then " + timelabel + (label != null ? label : stringifyExpectation(fn)), function(done) {
     var args, expectation,
       _this = this;
