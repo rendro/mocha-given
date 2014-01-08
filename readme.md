@@ -46,7 +46,7 @@ $ mocha -u mocha-given --compilers coffee:coffeescript -R spec
 
 If you have installed mocha and mocha-given locally
 ```
-$ npm install mocha mocha-given
+$ npm install mocha-given coffee-script
 ```
 you have to call the mocha binary directly:
 ```
