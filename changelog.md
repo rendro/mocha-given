@@ -1,10 +1,23 @@
 # CHANGELOG
 
+## Version 0.0.18, Jan 8, 2014
+* Updated mocha peer dependency
+
+## Version 0.0.17, Dec 17, 2013
+* fixed undefined error in test label
+
+## Version 0.0.16, Dec 13, 2013
+* added `Then.only` for deferred tests
+* added async `Whens` and `Invariants`
+
+## Version 0.0.15, Dec 11, 2013
+* added mocha-given interface for tests running in a browser
+
 ## Version 0.0.14, Dec 11, 2013
 * removed useless dependencies
 
 ## Version 0.0.13, Dec 11, 2013
-* fixed async Thens
+* fixed async `Thens`
 
 ## Version 0.0.12, Dec 10, 2013
 * remove expect.js dependency
@@ -13,7 +26,7 @@
 * Add `Invariant`
 
 ## Version 0.0.10, Dec 9, 2013
-* when has same syntax and logic as given
+* `When` has same syntax and logic as `Given`
 * added more tests
 
 ## Version 0.0.9, Dec 9, 2013
