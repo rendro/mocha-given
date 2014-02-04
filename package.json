@@ -1,6 +1,6 @@
 {
   "name": "mocha-given",
-  "version": "0.0.18",
+  "version": "0.1.0",
   "description": "Adds a Given-When-Then DSL to mocha as an alternative style for specs",
   "author": {
     "name": "Robert Fleischmann",
@@ -9,10 +9,10 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "coffee-script": "~1.6.3"
+    "coffee-script": "~1.7.1"
   },
   "peerDependencies": {
-    "mocha": "~1.16.0"
+    "mocha": "~1.17.1"
   },
   "devDependencies": {
     "expect.js": "~0.2.0"
