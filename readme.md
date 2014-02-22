@@ -95,3 +95,8 @@ Run from command line (with mocha and mocha-given installed):
 ```
 $ node runtests.js
 ```
+
+Credits
+-------
+
+Thanks to [SinnerSchrader](http://www.sinnerschrader.com/) for their support and the time to work on this project.
