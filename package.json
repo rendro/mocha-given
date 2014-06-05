@@ -12,10 +12,10 @@
     "coffee-script": "~1.7.1"
   },
   "peerDependencies": {
-    "mocha": "~1.17.1"
+    "mocha": "~1.20.1"
   },
   "devDependencies": {
-    "expect.js": "~0.2.0"
+    "expect.js": "~0.3.1"
   },
   "scripts": {
     "prepublish": "./node_modules/.bin/coffee -cbo browser lib/mocha-given.coffee",
