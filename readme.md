@@ -40,7 +40,7 @@ $ npm install -g mocha mocha-given
 ```
 Then you can run your tests by setting the interface of mocha to mocha-given
 ```
-$ mocha -u mocha-given --compilers coffee:coffeescript -R spec
+$ mocha -u mocha-given --compilers coffee:coffee-script -R spec
 ```
 ### Local installation of mocha
 
@@ -50,7 +50,7 @@ $ npm install mocha-given coffee-script
 ```
 you have to call the mocha binary directly:
 ```
-$ ./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffeescript -R spec
+$ ./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffee-script -R spec
 ```
 
 ## Run tests programmatically
