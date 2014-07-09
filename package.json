@@ -8,6 +8,7 @@
     "url": "http://robert-fleischmann.de"
   },
   "main": "./index.js",
+  "browser": "./browser/mocha-given.js",
   "dependencies": {
     "coffee-script": "~1.7.1"
   },
