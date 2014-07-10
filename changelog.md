@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version 0.1.2, Jul 10, 2014
+* Return value of assertion must strictly equal false for test to fail #3
+* Add browser field to package.json
+
+## Version 0.1.1, Jun 5, 2014
+* Update coffee-script and mocha peer dependency
+
+## Version 0.1.0, Feb 4, 2014
+* Update all dependencies
+
 ## Version 0.0.18, Jan 8, 2014
 * Updated mocha peer dependency
 
