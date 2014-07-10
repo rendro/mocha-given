@@ -85,8 +85,20 @@ invariantList = [];
 o = function(thing) {
   return {
     assert: function(context, args) {
-      if (!!!thing.apply(context, args)) {
-        throw new Error(getErrorDetails(thing, context));
+      var e, exception, result;
+      result = false;
+      exception = void 0;
+      try {
+        result = thing.apply(context, args);
+      } catch (_error) {
+        e = _error;
+        exception = e;
+      }
+      if (exception) {
+        throw new Error(exception.message + '\n' + getErrorDetails(thing, context));
+      }
+      if (result === false) {
+        throw new Error('return value is false\n' + getErrorDetails(thing, context));
       }
     },
     isFunction: function() {

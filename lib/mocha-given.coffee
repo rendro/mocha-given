@@ -47,7 +47,19 @@ invariantList = []
 o = (thing) ->
 
 	assert: (context, args) ->
-		throw new Error getErrorDetails thing, context if !!!thing.apply context, args
+		result = false
+		exception = undefined
+		try
+			result = thing.apply(context, args)
+		catch e
+			exception = e
+
+		if exception
+			throw new Error(exception.message + '\n' + getErrorDetails(thing, context))
+
+		if result == false
+			throw new Error('return value is false\n' + getErrorDetails(thing, context))
+		return
 
 	isFunction: ->
 		Object::toString.call(thing) is '[object Function]'
