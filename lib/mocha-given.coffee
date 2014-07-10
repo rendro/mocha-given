@@ -1,8 +1,8 @@
-Mocha     = if module?.parent? then module.parent.require('mocha') else window.Mocha
-Suite     = Mocha.Suite
-Test      = Mocha.Test
-utils     = Mocha.utils
-Context   = Mocha.Context
+Mocha   = if module?.parent? then module.parent.require('mocha') else window.Mocha
+Suite   = Mocha.Suite
+Test    = Mocha.Test
+utils   = Mocha.utils
+Context = Mocha.Context
 
 class Waterfall
 	constructor: (@context, functions = [], @finalCallback) ->
@@ -106,14 +106,14 @@ wasComparison = (expectation) ->
 		{left, comparator, right}
 
 declareSpec = (specArgs, itFunc)->
-	label = o(specArgs).firstThat (arg) -> o(arg).isString()
-	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
-	time  = o(specArgs).firstThat (arg) -> o(arg).isNumber()
+	label = o(specArgs).firstThat((arg) -> o(arg).isString())
+	fn    = o(specArgs).firstThat((arg) -> o(arg).isFunction())
+	time  = o(specArgs).firstThat((arg) -> o(arg).isNumber())
 	timelabel = if time > 0 then "after #{if time > 1e3 then time/1e3 else time} ms, " else ''
 	itFunc "then #{timelabel}#{label ? stringifyExpectation(fn)}", (done) ->
-		args = Array.prototype.slice.call arguments
+		args = Array.prototype.slice.call(arguments)
 		expectation = =>
-			o(fn).assert @, args
+			o(fn).assert(@, args)
 			done() if not o(fn).hasArguments()
 
 		new Waterfall(@, [].concat(whenList, invariantList), ->
@@ -201,57 +201,56 @@ MochaGivenSuite = (suite) ->
 		context.afterEach ->
 			delete @currentTest.ctx[i] for i of @currentTest.ctx when i not in @currentTest.ctxKeys
 
-		Given = ->
-			assignTo = o(arguments).firstThat (arg) -> o(arg).isString()
-			fn = o(arguments).firstThat (arg) -> o(arg).isFunction()
+		Given = (args...) ->
+			assignTo = o(args).firstThat((arg) -> o(arg).isString())
+			fn = o(args).firstThat((arg) -> o(arg).isFunction())
 			if assignTo
-				context.beforeEach -> @[assignTo] = fn.apply @
+				context.beforeEach(-> @[assignTo] = fn.apply(@))
 			else
-				context.beforeEach.apply @, Array.prototype.slice.call arguments
+				context.beforeEach.apply(@, args)
 
-		When = ->
-			assignTo = o(arguments).firstThat (arg) -> o(arg).isString()
-			fn = o(arguments).firstThat (arg) -> o(arg).isFunction()
+		When = (args...) ->
+			assignTo = o(args).firstThat((arg) -> o(arg).isString())
+			fn = o(args).firstThat((arg) -> o(arg).isFunction())
 			if assignTo
-				context.beforeEach -> whenList.push(-> @[assignTo] = fn.apply @)
+				context.beforeEach(-> whenList.push(-> @[assignTo] = fn.apply(@)))
 			else
-				context.beforeEach -> whenList.push(fn)
+				context.beforeEach(-> whenList.push(fn))
 
-			context.afterEach ->
-				whenList.pop()
+			context.afterEach(-> whenList.pop())
 
 		Invariant = (fn) ->
-			context.beforeEach -> invariantList.push(fn)
-			context.afterEach  -> invariantList.pop()
+			context.beforeEach(-> invariantList.push(fn))
+			context.afterEach(-> invariantList.pop())
 
 		Then = ->
-			declareSpec arguments, context.it
+			declareSpec(arguments, context.it)
 
-		context.Given = ->
+		context.Given = (args...) ->
 			mostRecentlyUsed = Given
-			Given.apply @, Array.prototype.slice.call arguments
+			Given.apply(@, args)
 
-		context.When = ->
+		context.When = (args...) ->
 			mostRecentlyUsed = When
-			When.apply @, Array.prototype.slice.call arguments
+			When.apply(@, args)
 
-		context.Then = ->
+		context.Then = (args...) ->
 			mostRecentlyUsed = Then
-			Then.apply @, Array.prototype.slice.call arguments
+			Then.apply(@, args)
 
 		context.Then.only = ->
-			declareSpec arguments, context.it.only
+			declareSpec(arguments, context.it.only)
 
 		context.Then.after = ->
 			mostRecentlyUsed = Then
-			declareSpec arguments, context.it
+			declareSpec(arguments, context.it)
 
-		context.Invariant = ->
+		context.Invariant = (args...) ->
 			mostRecentlyUsed = Invariant
-			Invariant.apply @, Array.prototype.slice.call arguments
+			Invariant.apply(@, args)
 
-		context.And = ->
-			mostRecentlyUsed.apply @, Array.prototype.slice.call arguments
+		context.And = (args...) ->
+			mostRecentlyUsed.apply(@, args)
 
 module.exports = MochaGivenSuite if typeof exports == 'object'
 Mocha.interfaces['mocha-given'] = MochaGivenSuite
