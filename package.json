@@ -16,11 +16,12 @@
     "mocha": "~1.20.1"
   },
   "devDependencies": {
-    "expect.js": "~0.3.1"
+    "expect.js": "~0.3.1",
+    "mocha": "^1.20.1"
   },
   "scripts": {
-    "prepublish": "./node_modules/.bin/coffee -cbo browser lib/mocha-given.coffee",
-    "test": "./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffee-script -R spec"
+    "prepublish": "coffee -cbo browser lib/mocha-given.coffee",
+    "test": "coffee runtests.coffee"
   },
   "keywords": [
     "mocha",
