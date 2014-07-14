@@ -53,6 +53,20 @@ you have to call the mocha binary directly:
 $ ./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffee-script -R spec
 ```
 
+## Run mocha-given tests & start contributing
+
+To run the `mocha-given` tests for developing, it has to be symlinked into the `node_modules` folder to enable `mocha` to resolve `mocha-given`.
+
+Therefore run the script:
+
+```
+$ npm run link
+```
+
+Afterwards `mocha` has to be installed with ` $ npm install mocha`.
+
+Now you can run the tests using `$ npm tests` and start contributing.
+
 ## Run tests programmatically
 
 ``` javascript
