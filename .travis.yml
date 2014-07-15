@@ -4,7 +4,4 @@ node_js:
   - "0.10"
   - "0.8"
 before_script:
-  - npm install https://github.com/rendro/mocha-given/archive/master.tar.gz
-branches:
-  only:
-    - master
+  - npm run link
