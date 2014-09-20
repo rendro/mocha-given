@@ -109,7 +109,7 @@ declareSpec = (specArgs, itFunc)->
 	label = o(specArgs).firstThat (arg) -> o(arg).isString()
 	fn    = o(specArgs).firstThat (arg) -> o(arg).isFunction()
 	time  = o(specArgs).firstThat (arg) -> o(arg).isNumber()
-	timelabel = if time > 0 then "after #{if time > 1e3 then time/1e3 else time} ms, " else ''
+	timelabel = if time != undefined then "after #{if time > 1e3 then time/1e3 else time} ms, " else ''
 	itFunc "then #{timelabel}#{label ? stringifyExpectation(fn)}", (done) ->
 		args = Array.prototype.slice.call arguments
 		expectation = =>
@@ -117,7 +117,7 @@ declareSpec = (specArgs, itFunc)->
 			done() if not o(fn).hasArguments()
 
 		new Waterfall(@, [].concat(whenList, invariantList), ->
-			if time > 0
+			if time != undefined
 				setTimeout(expectation, time)
 			else
 				expectation()

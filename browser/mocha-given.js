@@ -186,7 +186,7 @@ declareSpec = function(specArgs, itFunc) {
   time = o(specArgs).firstThat(function(arg) {
     return o(arg).isNumber();
   });
-  timelabel = time > 0 ? "after " + (time > 1e3 ? time / 1e3 : time) + " ms, " : '';
+  timelabel = time !== void 0 ? "after " + (time > 1e3 ? time / 1e3 : time) + " ms, " : '';
   return itFunc("then " + timelabel + (label != null ? label : stringifyExpectation(fn)), function(done) {
     var args, expectation;
     args = Array.prototype.slice.call(arguments);
@@ -199,7 +199,7 @@ declareSpec = function(specArgs, itFunc) {
       };
     })(this);
     return new Waterfall(this, [].concat(whenList, invariantList), function() {
-      if (time > 0) {
+      if (time !== void 0) {
         return setTimeout(expectation, time);
       } else {
         return expectation();
