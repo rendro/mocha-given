@@ -13,7 +13,7 @@
     "coffee-script": "~1.7.1"
   },
   "peerDependencies": {
-    "mocha": "~1.20.1"
+    "mocha": ">=1.20.1"
   },
   "devDependencies": {
     "expect.js": "~0.3.1",
