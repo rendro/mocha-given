@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "expect.js": "~0.3.1",
-    "mocha": "~1.20.1"
+    "mocha": "~2.5.1"
   },
   "scripts": {
     "prepublish": "./node_modules/.bin/coffee -cbo browser lib/mocha-given.coffee",
