@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.4.0
+
+Fixes found by an adversarial audit. Three of these caused specs to **pass when
+they should have failed**, which for a test framework is the worst possible
+defect: it hands you false confidence.
+
+### Fixed
+* **`Invariant` was never asserted.** The readme says an invariant is "asserted
+  before every Then in scope", but invariants ran through the waterfall, which
+  discards return values. `Invariant(() => false)` passed silently; only an
+  invariant that *threw* ever failed. Invariants are assertions now. `When`
+  steps are setup and still legitimately return anything.
+* **`done(err)` from a `When` or `Invariant` was discarded.**
+  `asyncTaskCompleted` took no argument, so an errored step was
+  indistinguishable from a successful one and the spec passed. `Given` goes
+  through mocha's real `beforeEach` and failed correctly, so the two were
+  silently asymmetric.
+* **`Then.only` and `it.only` crashed the entire run.** Both called
+  `Mocha.utils.escapeRegexp`, which does not exist anywhere in the supported
+  peer range. Focusing a single spec threw at load time and ran zero tests.
+  Both now use mocha's own `markOnly`, which also fixes `describe.only`
+  matching unrelated suites by substring.
+* An `And` written after a `describe.skip` / `xdescribe` block attached to a
+  `Then` *inside* the skipped suite, so it never ran and was never reported.
+* A synchronous throw from a step after an earlier step returned a promise
+  became an unhandled rejection, surfacing as a bogus timeout instead of the
+  real error.
+* The "a step may take `done` or return a promise, not both" guard ran after the
+  step body, so a step that called `done()` synchronously triggered mocha's
+  "done() called multiple times" instead of the intended message. Async
+  functions declaring `done` are now rejected before the body runs.
+* `Then.after(1500, ...)` rendered its title as "after 1.5 ms" — it converted to
+  seconds but still printed "ms".
+* The `browser` entry point could not be bundled: a static bare
+  `require('mocha')` is resolved eagerly by bundlers regardless of the runtime
+  guards around it.
+* The readme's explanation of arrow functions was wrong. `Then(() => this.x)`
+  usually *passes*, because module-level `this` is `module.exports` in
+  CommonJS; the real hazard is that the state is file-global and leaks between
+  specs.
+
 ## 0.3.0
 
 ### Changed

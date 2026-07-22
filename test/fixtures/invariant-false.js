@@ -1,0 +1,2 @@
+Invariant(() => false);
+Then(() => true);

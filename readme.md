@@ -97,7 +97,22 @@ Given(function () { this.number = 24; });     // writes to the test context
 Then(function () { return this.number === 24; });
 
 Given(() => { this.number = 24; });            // writes to module scope
-Then(() => this.number === 24);                // reads module scope, never passes
+Then(() => this.number === 24);                // reads module scope
+```
+
+The arrow version is worse than it looks. It often *passes*, because in
+CommonJS the module-level `this` is `module.exports`, so both arrows share one
+object. But that object is global to the file and is never reset between tests,
+so state leaks from one spec into the next:
+
+```js
+describe('first', function () {
+  Given(() => { this.n = 1; });
+  Then(() => this.n === 1);        // passes
+});
+describe('second', function () {
+  Then(() => this.n === 1);        // also passes, with no Given at all
+});
 ```
 
 Specs built on closure variables have no such constraint, and arrows read
