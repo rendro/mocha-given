@@ -114,6 +114,34 @@ Then(() => subject.length === 0);
 | `this.foo` shared state | `function` |
 | closure variables | arrow, or `function` |
 
+## And after Then
+
+An `And` following a `Then` becomes part of that same spec, so the `Given` and
+`When` setup runs **once** for the whole group rather than once per assertion:
+
+```js
+Given(function () { this.subject = expensiveSetup(); });
+When(function () { this.result = this.subject.run(); });
+Then(function () { return this.result.ok === true; });
+And(function () { return this.result.items.length === 3; });
+And(function () { return this.result.errors.length === 0; });
+```
+
+That is one test, one setup. Its title joins the assertions:
+
+```
+✔ then this.result.ok === true and this.result.items.length === 3 and this.result.errors.length === 0
+```
+
+Two separate `Then`s still run the setup twice, which is the distinction
+[rspec-given](https://github.com/jimweirich/rspec-given) and
+[jasmine-given](https://github.com/searls/jasmine-given) draw. Use `And` when
+several assertions describe one outcome, and a second `Then` when you want a
+fresh fixture.
+
+`And` after a `Given`, `When` or `Invariant` is unchanged: it repeats that
+construct.
+
 ## Promises
 
 `Given`, `When`, `Invariant` and `Then` may all return a promise, and each step
@@ -145,7 +173,7 @@ error. A step may take a `done` callback or return a promise, but not both.
 | `Then(label, fn)` | Same, with an explicit title |
 | `Then.after(ms, label, fn)` | Runs the assertion after a delay |
 | `Then.only(...)` | Runs only this spec |
-| `And(fn)` | Repeats whichever of `Given`, `When`, `Then` or `Invariant` came last |
+| `And(fn)` | Repeats whichever of `Given`, `When` or `Invariant` came last. After a `Then` it adds an assertion to that same spec |
 | `Invariant(fn)` | Asserted before every `Then` in scope |
 
 A `Then` without a label takes its title from the source of the expression, so

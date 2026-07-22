@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.3.0
+
+### Changed
+* **`And` after `Then` no longer re-runs the setup** (#2, open since 2014). An
+  `And` following a `Then` now joins that spec instead of declaring a new one,
+  so the `Given` and `When` before it run once for the whole group rather than
+  once per assertion. This is the `subsequentThen` behaviour of jasmine-given,
+  which mocha-given set out to mirror.
+
+  A `Then` plus two `And`s used to be three tests that each re-ran setup; it is
+  now one test with three assertions, titled
+  `then a === 1 and b === 2 and c === 3`. Two separate `Then`s still run the
+  setup twice.
+
+  `And` after a `Given`, `When` or `Invariant` is unchanged.
+* `Then.only` now sets the target for a following `And`, as `Then` and
+  `Then.after` already did.
+
 ## 0.2.0
 
 Rewritten in plain JavaScript. **No runtime dependencies**: `coffee-script` is
