@@ -1,28 +1,31 @@
 {
   "name": "mocha-given",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Adds a Given-When-Then DSL to mocha as an alternative style for specs",
   "author": {
     "name": "Robert Fleischmann",
     "email": "rendro87@gmail.com",
-    "url": "http://robert-fleischmann.de"
+    "url": "https://robert-fleischmann.com"
   },
+  "license": "MIT",
   "main": "./index.js",
-  "browser": "./browser/mocha-given.js",
-  "dependencies": {
-    "coffee-script": "~1.12.3"
-  },
+  "browser": "./lib/mocha-given.js",
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "peerDependencies": {
-    "mocha": ">=1.20.1"
+    "mocha": ">=8"
   },
   "devDependencies": {
+    "coffeescript": "^2.7.0",
     "expect.js": "~0.3.1",
-    "mocha": "~2.5.1"
+    "mocha": "^11.7.6"
   },
   "scripts": {
-    "prepublish": "./node_modules/.bin/coffee -cbo browser lib/mocha-given.coffee",
-    "test": "./node_modules/.bin/mocha -u mocha-given --compilers coffee:coffee-script -R spec",
-    "link": "mkdir -p node_modules/mocha-given && cd node_modules/mocha-given && ln -s ../../package.json package.json && ln -s ../../index.js index.js && ln -s ../../lib lib && cd -"
+    "test": "npm run test:js && npm run test:coffee",
+    "test:js": "mocha --require ./index.js --ui mocha-given test/*.js",
+    "test:coffee": "mocha --require ./index.js --require coffeescript/register --ui mocha-given test/coffee-compat.coffee"
   },
   "keywords": [
     "mocha",
@@ -31,19 +34,16 @@
     "then",
     "test",
     "tdd",
-    "bdd"
+    "bdd",
+    "interface",
+    "ui"
   ],
   "bugs": {
     "url": "https://github.com/rendro/mocha-given/issues"
   },
+  "homepage": "https://github.com/rendro/mocha-given",
   "repository": {
     "type": "git",
-    "url": "rendro/mocha-given"
-  },
-  "licenses": [
-    {
-      "name": "Apache License 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ]
+    "url": "git+https://github.com/rendro/mocha-given.git"
+  }
 }
