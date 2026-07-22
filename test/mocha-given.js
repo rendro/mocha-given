@@ -1,5 +1,11 @@
 const expect = require('expect.js');
 
+// setTimeout(fn, N) can fire a fraction under N as measured by Date.now(),
+// which made these specs flaky on busy CI runners. Allow a small tolerance.
+const DELAY = 30;
+const TOLERANCE = 5;
+const elapsedIsAtLeastDelay = (start) => Date.now() - start >= DELAY - TOLERANCE;
+
 // Ported from test/mocha-given.coffee. Specs that read or write `this` use
 // classic functions, because arrows do not bind mocha's test context.
 describe('mocha-given', function () {
@@ -268,9 +274,9 @@ describe('mocha-given', function () {
     });
 
     describe('async Given', function () {
-      Given((done) => setTimeout(done, 30));
+      Given((done) => setTimeout(done, DELAY));
       Then(function () {
-        return Date.now() - this.t >= 30;
+        return elapsedIsAtLeastDelay(this.t);
       });
     });
 
@@ -278,14 +284,13 @@ describe('mocha-given', function () {
       Given('result', () => false);
       When(function (done) {
         setTimeout(() => {
-          const diff = Date.now() - this.t;
-          if (diff >= 30) {
+          if (elapsedIsAtLeastDelay(this.t)) {
             this.result = true;
             done();
           } else {
-            done(new Error(`expected '${diff}' to be bigger than '30'`));
+            done(new Error(`only ${Date.now() - this.t}ms elapsed`));
           }
-        }, 30);
+        }, DELAY);
       });
       Then(function () {
         return this.result === true;
@@ -295,14 +300,13 @@ describe('mocha-given', function () {
     describe('async Invariant', function () {
       Invariant(function (done) {
         setTimeout(() => {
-          const diff = Date.now() - this.t;
-          if (diff >= 30) {
+          if (elapsedIsAtLeastDelay(this.t)) {
             this.result = true;
             done();
           } else {
-            done(new Error(`expected '${diff}' to be bigger than '30'`));
+            done(new Error(`only ${Date.now() - this.t}ms elapsed`));
           }
-        }, 30);
+        }, DELAY);
       });
       Then(function () {
         return this.result === true;
@@ -312,13 +316,12 @@ describe('mocha-given', function () {
     describe('async Then', function () {
       Then(function (done) {
         setTimeout(() => {
-          const diff = Date.now() - this.t;
-          if (diff >= 30) {
-            done();
-          } else {
-            done(new Error(`expected '${diff}' to be bigger than '30'`));
-          }
-        }, 30);
+          done(
+            elapsedIsAtLeastDelay(this.t)
+              ? undefined
+              : new Error(`only ${Date.now() - this.t}ms elapsed`),
+          );
+        }, DELAY);
       });
     });
   });
@@ -327,8 +330,8 @@ describe('mocha-given', function () {
     Given(function () {
       this.t = Date.now();
     });
-    Then.after(30, 'time has passed', function () {
-      return Date.now() - this.t >= 30;
+    Then.after(DELAY, 'time has passed', function () {
+      return elapsedIsAtLeastDelay(this.t);
     });
   });
 });

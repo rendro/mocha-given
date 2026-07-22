@@ -32,6 +32,12 @@ describe 'CoffeeScript specs still work', ->
 		Given (done) -> setTimeout done, 20
 		Then -> expect(true).to.be(true)
 
+	describe 'And after Then shares setup', ->
+		runs = 0
+		Given -> runs++
+		Then -> true
+		And  -> runs == 1
+
 	describe 'promises from CoffeeScript', ->
 		Given 'answer', -> Promise.resolve 42
 		Then -> @answer == 42
